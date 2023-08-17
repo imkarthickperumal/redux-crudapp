@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const Navbar = () => {
+  
   const tasksList = useSelector((state) => state.tasks);
 
   return (
