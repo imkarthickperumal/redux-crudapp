@@ -9,6 +9,11 @@
       "id": 2,
       "title": "About Screen",
       "description": "Develop About Screen"
+    },
+    {
+      "title": "Good morning",
+      "description": "Redux topic start",
+      "id": 3
     }
   ]
 }

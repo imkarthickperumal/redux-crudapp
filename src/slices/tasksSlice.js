@@ -7,16 +7,40 @@ const initialState = {
   error: "", // Error Handline
 };
 
+const BASE_URL = "http://localhost:8000/tasks";
+
 //GET
 export const getTasksFromServer = createAsyncThunk(
   "tasks/getTasksFromServer",
   async (_, { rejectWithValue }) => {
-    const response = await fetch("http://localhost:8000/tasks");
+    const response = await fetch(BASE_URL);
     if (response.ok) {
       const jsonResponse = await response.json();
       return jsonResponse;
     } else {
       return rejectWithValue({ error: "No Tasks Found" });
+    }
+  }
+);
+
+//POST
+
+export const addTaskToServer = createAsyncThunk(
+  "tasks/addTaskToServer",
+  async (task, { rejectWithValue }) => {
+    const options = {
+      method: "POST",
+      body: JSON.stringify(task),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    };
+    const response = await fetch(BASE_URL, options);
+    if (response.ok) {
+      const jsonResponse = await response.json();
+      return jsonResponse;
+    } else {
+      return rejectWithValue({ error: "Task Not Added" });
     }
   }
 );
@@ -46,6 +70,7 @@ const tasksSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // GET cases of Thunk lifecycle
       .addCase(getTasksFromServer.pending, (state) => {
         state.isLoading = true;
       })
@@ -58,6 +83,19 @@ const tasksSlice = createSlice({
         state.isLoading = true;
         state.error = action.payload.error;
         state.tasksList = [];
+      })
+      // POST cases of Thunk lifecycle
+      .addCase(addTaskToServer.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addTaskToServer.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = "";
+        state.tasksList.push(action.payload);
+      })
+      .addCase(addTaskToServer.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload.error;
       });
   },
 });
