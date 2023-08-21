@@ -65,6 +65,23 @@ export const updateTaskInServer = createAsyncThunk(
   }
 );
 
+//DELETE
+export const deleteTaskFromServer = createAsyncThunk(
+  "tasks/deleteTaskFromServer",
+  async (task, { rejectWithValue }) => {
+    const options = {
+      method: "DELETE",
+    };
+    const response = await fetch(BASE_URL + "/" + task.id, options);
+    if (response.ok) {
+      const jsonResponse = await response.json();
+      return jsonResponse;
+    } else {
+      return rejectWithValue({ error: "Task Not Deleted" });
+    }
+  }
+);
+
 const tasksSlice = createSlice({
   name: "tasksSlice",
   initialState,
@@ -117,6 +134,7 @@ const tasksSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload.error;
       })
+
       // PATCH cases of Thunk lifecycle
       .addCase(updateTaskInServer.pending, (state) => {
         state.isLoading = true;
@@ -131,6 +149,19 @@ const tasksSlice = createSlice({
       .addCase(updateTaskInServer.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload.error;
+      })
+
+      // DELETE cases of Thunk lifecycle
+      .addCase(deleteTaskFromServer.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteTaskFromServer.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = "";
+      })
+      .addCase(deleteTaskFromServer.rejected, (state, action) => {
+        state.error = action.payload.error;
+        state.isLoading = false;
       });
   },
 });

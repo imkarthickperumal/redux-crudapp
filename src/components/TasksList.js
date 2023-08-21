@@ -7,6 +7,7 @@ import {
   setSelectedTask,
   removeTaskFromList,
   getTasksFromServer,
+  deleteTaskFromServer,
 } from "../slices/tasksSlice";
 
 const TasksList = () => {
@@ -25,7 +26,11 @@ const TasksList = () => {
 
   const deleteTask = (task) => {
     console.log("delete task");
-    dispatch(removeTaskFromList(task));
+    dispatch(deleteTaskFromServer(task))
+    .unwrap()
+    .then(() => {
+      dispatch(removeTaskFromList(task))
+    })
   };
 
   const [modalShow, setModalShow] = useState(false);
