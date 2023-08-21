@@ -3,8 +3,8 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useSelector } from "react-redux";
-import { updateTaskInList } from "../slices/tasksSlice";
-import {useDispatch} from 'react-redux';
+import { updateTaskInServer } from "../slices/tasksSlice";
+import { useDispatch } from "react-redux";
 
 const MyVerticallyCenteredModal = (props) => {
   const { selectedTask } = useSelector((state) => state.tasks);
@@ -12,11 +12,11 @@ const MyVerticallyCenteredModal = (props) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [id, setId] = useState(0);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const updateTask = () => {
     props.onHide();
-    dispatch(updateTaskInList({id,title,description}))
+    dispatch(updateTaskInServer({ id, title, description }));
   };
 
   useEffect(() => {
